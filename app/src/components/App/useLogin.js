@@ -1,5 +1,7 @@
 
-const HOST = process.env.HOST_BE || 'http://localhost:5000'
+const HOST = ''
+//'https://spendwise-mern-stack-server-client.onrender.com' 
+//process.env.HOST_BE || 'http://localhost:5000'
 
 export async function loginUser(credentials) {
     return await fetch(`${HOST}/api/v1/user/login`, {
@@ -14,10 +16,8 @@ export async function loginUser(credentials) {
 export async function loginUser1(credentials) {
     return await fetch(`${HOST}/api/v1/user/login`, {
     	method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json',
+                },
         body: JSON.stringify(credentials)
     })
     .then((response) => response.json())
