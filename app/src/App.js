@@ -27,10 +27,12 @@ import {Footer} from './components/Footer';
 import useToken from './components/App/useToken';
 import './App.css';
 import './holygrail.css';
-// import { useNavigate } from 'react-router-dom'
+//import { useNavigate } from 'react-router-dom'
 //import jwt from 'jsonwebtoken'
 //import { InvalidTokenError, jwtDecode} from 'jwt-decode'
 import { jwtDecode} from 'jwt-decode'
+
+//const HOST = process.env.HOST_BE || 'http://localhost:5000'
 
 function App() {
   const { token, setToken, deleteToken } = useToken();
@@ -45,7 +47,7 @@ function App() {
     const secondsInOneWeek = 604800;
     //const secondsInOneHour = 3600;
     if( insertedAtDate < current_time_secs - secondsInOneWeek ) {
-      console.log('Token Expired.');
+      console.log('Token expired.');
       // localStorage.removeItem("token");
       // navigate('/login', { replace: true })
       return true;
@@ -87,15 +89,6 @@ function App() {
     deleteToken();
     sessionStorage.removeItem('token');
   }
-
-  // if(!token) {
-  //   return (
-  //     <div>
-  //       <Login setToken={setToken} />
-  //       <Register />
-  //   </div>
-  //   )
-  // }
 
   return (
     <div className='holy-grail-flexbox'>
