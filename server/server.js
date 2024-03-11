@@ -4,7 +4,7 @@ const express = require('express');
 const dotenv  = require('dotenv');
 const morgan  = require('morgan');
 const cors    = require('cors')  //needed only on local machine due to diff in ports, on prod it will be same
-const connectDB    = require('./config/db');
+//const connectDB    = require('./config/db');
 const transactions = require('./routes/v1/transactions');
 const users        = require('./routes/v1/users');
 //const controllers  = require('./controllers/v1/1-controllers')
@@ -20,10 +20,13 @@ if(process.env.NODE_ENV === 'development') {
     app.use(cors()) //only in local machine where ports are diff
 }
 
+//Error: ENOENT: no such file or directory, stat '/opt/render/project/src/server/client/app/index.html'
 if(process.env.NODE_ENV === 'production') {
-    app.use(express.static('app/build'));
+    //app.use(express.static('app/build'));
+    app.use(express.static('build'));
+
     app.get('*', (req, res) => 
-        res.sendFile(path.resolve(__dirname, 'client', 'app', 'index.html')
+        res.sendFile(path.resolve(__dirname, 'build',  'index.html')
         ));
 }
 
