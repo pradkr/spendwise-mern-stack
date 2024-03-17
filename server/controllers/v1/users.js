@@ -6,12 +6,16 @@ const connectDB = require('../../config/db');
 
 dotenv.config({ path: './config/config.env'} );
 const secret = process.env.SECRETCODE || 'mysupersecretcode900'
-//console.log('secrete='+secret)
+process.env.DEBUG && console.log('in constrollers users secrete='+secret)
 
 //const PORT   = process.env.PORT || 5000;
 
-console.log('Starting DB connection');
-connectDB();
+ console.log('Starting DB connection');
+ connectDB(process.env.REACT_APP_MONGODB_URL);
+
+function createToken(name, email, id, secret) {
+	return jwt.sign( { name, email, id }, secret, {expiresIn: '7d'});
+}
 
 exports.findUser = async (req, res) => {
 	try {
@@ -33,19 +37,26 @@ exports.findUser = async (req, res) => {
 } 
 
 exports.createUser = async (req, res) => {
-	//console.log('Debug: createUser req body='+ JSON.stringify(req.body));
+	//process.env.DEBUG && console.log('Debug: createUser req body='+ JSON.stringify(req.body));
+	const {name, email, password} = req.body;
+	//process.env.DEBUG && console.log('Debug: createUser name=' + name + ',email=' + email + ',password=' + password);
+
 	try {
-		const user = await User.findOne( {email: req.body.email} )
+		const user = await User.findOne( {email: email} )
 		if (user) {
 			return res.status(400).json( { success: false, status: 'error', error: 'User already exists.' })
 		}
-		const hashedPassword = await bcrypt.hash(req.body.password, 10)
-		await User.create({
-			name: req.body.name,
-			email: req.body.email,
+
+		const hashedPassword = await bcrypt.hash(password, 10)
+		const newlyCreatedUser = await User.create({
+			// name: req.body.name,
+			// email: req.body.email,
+			name: name,
+			email: email,
 			password: hashedPassword,
 		})
-		return res.status(201).json({ success: true, status: 'ok'})
+		const token = createToken(name, email, newlyCreatedUser._id, secret);
+		return res.status(201).json({ success: true, status: 'ok', email: newlyCreatedUser.email, name: name, user: token }) //any change here should be replicated to login user also and in frontend code
 	} catch (err) {
 		return res.status(500).json({ success: false, status: 'error', error: 'Invalid data ' + err })
 	}
@@ -61,13 +72,12 @@ exports.loginUser = async (req, res) => {
 
 	const isPasswordValid = await bcrypt.compare(req.body.password, user.password)
 	if (isPasswordValid) {
-		const token = jwt.sign( { name: user.name,
-				                  email: user.email,
-			                    }, secret);
-		return res.status(200).json({ success: true, status: 'ok', user: token })
+		//const token = jwt.sign( { name: user.name, email: user.email, user._id }, secret);
+		const token = createToken(user.name, user.email, user._id, secret);
+		return res.status(200).json({ success: true, status: 'ok', email: user.email, name: user.name, user: token }) //any change here should be replicated to create user also and in frontend code
 	} else {
         console.log('Incorrect password entered.');
-		return res.status(403).json({ success: false, status: 'error', user: false })
+		return res.status(403).json({ success: false, status: 'error', error: 'Incorrect password entered.', user: false })
 	}
 }
 

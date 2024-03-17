@@ -1,7 +1,7 @@
 import React, { createContext, useReducer } from 'react';
 import axios from 'axios';
-
 //import AppReducer from './AppReducer';
+import { useAuthContext } from './useAuthContext';
 
 // Initial state
 const initialState = {
@@ -38,6 +38,8 @@ const AppReducer = (state, action) => {
         ...state,
         error: action.payload
       }
+    case 'EMPTY_TRANSACTIONS':
+        return { transactions: []}
     default:
       return state;
   }
@@ -46,65 +48,105 @@ const AppReducer = (state, action) => {
 // Provider component
 export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
-  // Actions
-  async function getTransactions(email) {
-    try {
-      const res = await axios.get('/api/v1/transactions/' + email);
-      if (res && res.data && res.data.data)
-      {
-        dispatch({
-          type: 'GET_TRANSACTIONS',
-          payload: res.data.data
-        });
-      }
-    } catch (err) {
-      //console.log("payload:", err)
-      dispatch({
-        type: 'TRANSACTION_ERROR',
-        payload: err.response.data
-      });
+  const { user } = useAuthContext();
+  let config = ''
+    if (user && user.user) {
+        //console.log('User='+JSON.stringify(user)+' token='+user.user);
+        config = { headers: {   'Content-Type' : 'application/json',
+                                'Accept'       : 'application/json',
+                                'Authorization': `Bearer ${user.user}` }};
+        
+    } else {
+        //console.log('Token not found.');
+        // dispatch({
+        //     type: 'TRANSACTION_ERROR',
+        //     payload: 'User not logged in'
+        // });
     }
-  }
+    //console.log('config='+JSON.stringify(config));
 
-  async function deleteTransaction(id) {
-    try {
-      await axios.delete(`/api/v1/transactions/${id}`);
-      dispatch({
-        type: 'DELETE_TRANSACTION',
-        payload: id
-      });
-    } catch (err) {
-      dispatch({
-        type: 'TRANSACTION_ERROR',
-        payload: err.resonse.data.error
-      });
+    // Actions
+    async function getTransactions() {
+        //console.log('Came to GlobalState-getTranssactions')
+        try {
+            //const res = await axios.post('/api/v1/transactions', transaction, config);
+            const res = await axios.get('/api/v1/transactions', config );
+            if (res && res.data && res.data.data) {
+                dispatch({
+                    type: 'GET_TRANSACTIONS',
+                    payload: res.data.data
+                });
+            }
+        } catch (err) {
+            //console.log("payload:", err)
+            dispatch({
+                type: 'TRANSACTION_ERROR',
+                payload: err.response.data
+            });
+        }
     }
-  }
 
-  async function addTransaction(transaction) { 
-    const config = { headers: {'Content-Type': 'application/json'}};
-    try {
-      const res = await axios.post('/api/v1/transactions', transaction, config);
-      dispatch({
-        type: 'ADD_TRANSACTION',
-        payload: res.data.data
-      });
-    } catch (err) {
-      dispatch({
-        type: 'TRANSACTION_ERROR',
-        payload: err.resonse.data.error
-      });
+    async function deleteTransaction(id) {
+        try {
+            await axios.delete(`/api/v1/transactions/${id}`, config);
+            dispatch({
+                type: 'DELETE_TRANSACTION',
+                payload: id
+            });
+        } catch (err) {
+            dispatch({
+                type: 'TRANSACTION_ERROR',
+                payload: err.resonse.data.error
+            });
+        }
     }
-  }
+
+    async function addTransaction(transaction) { 
+        //const config = { headers: {'Content-Type': 'application/json'}};
+        try {
+            const res = await axios.post('/api/v1/transactions', transaction, config);
+            dispatch({
+                type: 'ADD_TRANSACTION',
+                payload: res.data.data
+            });
+        } catch (err) {
+            dispatch({
+                type: 'TRANSACTION_ERROR',
+                payload: err.resonse.data.error
+            });
+        }
+    }
+
+    async function emptyTransactionsFromBrowser() {
+        try {
+            //const res = await axios.post('/api/v1/transactions', transaction, config);
+            // const res = await axios.get('/api/v1/transactions', config );
+            // if (res && res.data && res.data.data) {
+                dispatch({
+                    type: 'EMPTY_TRANSACTIONS',
+                    payload: initialState
+                });
+            // }
+        } catch (err) {
+            //console.log("payload:", err)
+            dispatch({
+                type: 'TRANSACTION_ERROR',
+                payload: 'Could not empty the browser transation list'
+            });
+        }
+    }
 
   return (
   <GlobalContext.Provider 
-      value={ { transactions: state.transactions,
-                error: state.error,
-                loading: state.loading,
+      value={ { 
+                transactions: state?.transactions,
+                error: state?.error,
+                loading: state?.loading,
                 deleteTransaction, 
                 addTransaction, 
-                getTransactions } }>
+                getTransactions,
+                emptyTransactionsFromBrowser
+                } }>
     {children}
   </GlobalContext.Provider>);
 }

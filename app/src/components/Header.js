@@ -1,15 +1,19 @@
 import React from 'react';
-//import { jwtDecode } from "jwt-decode";
 import { Link } from 'react-router-dom'
+import { useLogOut } from '../context/useLogOut';
+import { useAuthContext } from '../context/useAuthContext';
 
-export const Header = ({token, name, setToken, logOut}) => {
+//export const Header = ({token, name, setToken, logOut}) => {
+export const Header = () => {
+  const { user } = useAuthContext();
   //const [user, setUser] = useState({});  //remove state and use redux or global state
-  
-  // const handleSignOut = (e) => {
-  //   setToken(null); //empty logged in user who used other auth than google
-  //   //setUser({}); //empty the user details
-  //   logOut();
-  // }
+  const {logout} = useLogOut();
+  const handleSignOut = (e) => {
+    //setToken(null); //empty logged in user who used other auth than google
+    //setUser({}); //empty the user details
+    //logOut();
+    logout();
+  }
      
   return ( 
     <nav>
@@ -19,18 +23,21 @@ export const Header = ({token, name, setToken, logOut}) => {
               <div>
                 <Link to="/">Home</Link>
               </div>
-      {(token && name) ?
+    { 
+      //(token && name) ?
+      (user && (user.name || user.email)) ? (
             <>
               <div className='logged-in-user-section'>
-                <div className='truncate'>Hello &nbsp;{name}</div>
+                <div className='truncate'>Hello &nbsp;{user.name || user.email}</div>
               </div>
               <div>
-                <button onClick={() => logOut()}>Logout</button>
+                <button onClick={handleSignOut}>Logout</button>
               </div> 
             </>
-        : (  
+      )
+      : 
+      (  
             <>
-              {/* <button onClick={(e) => handleSignIn(e)} >Sign in </button>  */}
               <div>
                 <Link to="/login">Login</Link>
               </div>
@@ -38,11 +45,9 @@ export const Header = ({token, name, setToken, logOut}) => {
                 <Link to="/signup">Sign Up</Link>
               </div>
             </>
-          )
-        }
-            </div>
-
-              
+      )
+    }
+            </div>              
         </div>
     </nav>
   )

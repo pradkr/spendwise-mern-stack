@@ -1,11 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import App from './App';
-// import App from './App_test';
+import { AuthContextProvider } from './context/AuthContext';
+import './index.css';
 // import { Provider } from 'react-redux';
 // import store from './store';
-// import useAuthentication from "./context/useAuthentication_test";
 
 //import AuthProvider from './context/AuthProvider'
 // function ConnectedApp() {
@@ -20,10 +19,12 @@ import App from './App';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+        <AuthContextProvider>
     {/* <Provider store={store}> */}
       {/* <ConnectedApp /> */}
       <App />
     {/* </Provider> */}
+    </AuthContextProvider>
   </React.StrictMode>
 );
 

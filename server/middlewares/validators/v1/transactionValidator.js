@@ -1,6 +1,7 @@
 const {check, validationResult} = require('express-validator');
 
 exports.validateTransaction = [
+    check('category').trim().escape().notEmpty().withMessage('Transaction category identifier can not be empty!').bail(),
     check('text').trim().escape().notEmpty().withMessage('Transaction text identifier can not be empty!').bail(),
     //.isLength({min: 2}).withMessage('Minimum 2 characters required in name!').bail(),
 

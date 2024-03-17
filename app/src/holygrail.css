@@ -9,12 +9,12 @@
 }
 
 /* background colors */
-.holy-grail-flexbox > .header { background:white}
+.holy-grail-flexbox > .header { background:white; border: 1px solid lightgray;}
 .holy-grail-flexbox > .main-content {
     /* background:#f0ecec */
 }
-.holy-grail-flexbox > .left-sidebar {background:white}
-.holy-grail-flexbox > .right-sidebar {background:white}
+.holy-grail-flexbox > .left-sidebar, .holy-grail-flexbox > .right-sidebar {background:white; border: 1px solid lightgray; margin-top: 10px;}
+/* .holy-grail-flexbox > .right-sidebar {background:white; border: 1px solid lightgray; margin-top: 10px;} */
 .holy-grail-flexbox > .footer {background:white}
 
 /* columns (mobile) */

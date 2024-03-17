@@ -2,7 +2,11 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Raleway:ital@0;1&display=swap'); */
 :root {
   --main-fg-color: #ffffff; 
-  --main-bg-color: #dadada;
+  /* --main-bg-color: #dadada; */
+  --main-bg-color: #ffffff;
+  --primary: #1aac83;
+  --error: #e7195a;
+  --error-notification-bg-color: #f29f78;
 }
 /* .one {
   background-color: var(--main-bg-color);
@@ -55,14 +59,14 @@ nav {
   align-items: center;
 } 
 .nav-buttons button {
-  padding: 5px 10px;
-  border: none;
-  background-color: rgb(245, 191, 164);
-  color: white;
+  /* padding: 5px 10px;
+  border: none;*/
+  /* background-color: rgb(245, 191, 164); */
+  /* color: white; */
   /* border-radius: 5px; */
-  margin-left: 10px;
+  /* margin-left: 10px;
   margin-right: 10px;
-  cursor: pointer;
+  cursor: pointer;  */
 }
 
 .logged-in {
@@ -83,6 +87,22 @@ nav {
 } */
 .logged-in .username {
   text-transform: capitalize;
+}
+
+nav a {
+  /* margin-left: 10px; */
+}
+nav button {
+  background: #fff;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  padding: 6px 10px;
+  /* border-radius: 4px; */
+  /* font-family: "Poppins"; */
+  cursor: pointer;
+  /* font-size: 1em; */
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .truncate {
@@ -115,8 +135,8 @@ main {
   /* width: 30%; */
   /* margin-right: 5px; 
   margin-left: 10px;  */
-  padding-left: 20px;
-  padding-right: 20px;
+  /* padding-left: 20px;
+  padding-right: 20px; */
   min-width: fit-content;
 }
   
@@ -127,8 +147,8 @@ main {
   
 .right {
   /* width: 30%; */
-  padding-left: 20px;
-  padding-right: 20px;
+  /* padding-left: 20px;
+  padding-right: 20px; */
   min-width: fit-content;
 }
 
@@ -137,6 +157,7 @@ main {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-evenly;
+  margin-top: 5px;
 }
 
 .middle-lower-big {
@@ -243,9 +264,18 @@ input[type='email']
   background-color: #e0906d;
 }
 
+.user-error-box {
+  padding: 5px;
+  text-align: center;
+  /* background-color: orange; */
+  background-color: var(--error-notification-bg-color);
+  color: white;
+}
+
 .error {
   color: red;
 }
+
 
 .trxn-history{
   background-color: #fff;
@@ -297,6 +327,17 @@ input[type='email']
   padding-top: 5px;
 }
 
+.trxn-category {
+  font-size:x-small;
+  padding-top: 5px;
+
+}
+.trxn-category .category {
+  border: 1px solid gray;
+  border-radius: 5px;
+  padding: 0px 5px 0px 5px;
+}
+
 .delete-btn {
   cursor: pointer;
   border-radius: 5px;
@@ -326,6 +367,10 @@ canvas   {
 
 .chartjs-hidden-iframe {
   height: 80% !important;
+}
+.chart-label {
+  text-align: center;
+  margin-bottom: 30px;
 }
 
 .footer {

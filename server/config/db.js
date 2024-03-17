@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
-const connectDB = async () => {
+const connectDB = async (dbURL) => {
   try {
-      const conn = await mongoose.connect(process.env.REACT_APP_MONGODB_URL, {});
+      (process.env.DEBUG) && console.log('DB URL=' + dbURL)
+      const conn = await mongoose.connect(dbURL, {});
       console.log(`Success: Connected to MongoDB host ${conn.connection.host}`);
   } catch(err) {
       console.log(`Error: ${err.message}`, "Exiting the process.");

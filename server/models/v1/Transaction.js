@@ -6,6 +6,7 @@ const TransactionSchema = new mongoose.Schema({
       //index: true,
       //unique: true,
     },
+    category:  { type: String, trim: true, required: [true, 'Missing transaction type'] },
     text:  { type: String, trim: true, required: [true, 'Missing transaction text'] },
     amount: { type: Number, required: [true, 'Missing transaction amount'] },
     type: {  type: String, trim: true, enum: { values: ['expense', 'income'], message: 'Invalid transaction type {VALUE}' }, required: [true, 'Missing transaction type'] },

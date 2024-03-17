@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { check, validationResult } = require('express-validator');
-const { findUser, createUser, loginUser, getQuote, createQuote 
-      }  = require('../../controllers/v1/users');
-const { validateUser } = require('../../middlewares/validators/v1/userValidator');
+//const { check, validationResult } = require('express-validator');
+const { findUser, createUser, loginUser, getQuote, createQuote } = require('../../controllers/v1/users');
+const { validateUser, validateCredentials } = require('../../middlewares/validators/v1/userValidator');
 
 // app.post('/api/v1/user/register', controllers.createUser);
 // app.post('/api/v1/user/login', controllers.loginUser);
@@ -20,7 +19,7 @@ router
 
 router
     .route('/login')
-    .post(loginUser)
+    .post(validateCredentials, loginUser)
 
 router
     .route('/getquote')

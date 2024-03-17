@@ -12,6 +12,7 @@ export const Transaction = ({ transaction }) => {
       <div className='trxn-name-amount'><div>{transaction.text}</div><div>{IndianRupee.format(transaction.amount)}</div></div>
       {/* <div className='trxn-date-time'>{transaction.datetime}</div> */}
       <div className='trxn-date-time'>{IndianDate.format(Date.parse(transaction.datetime))}</div>
+      <div className='trxn-category'><span className='category'>{transaction.category}</span></div>
       <button onClick={() => deleteTransaction(transaction._id)} className="delete-btn">Delete</button>
     </li>
   )

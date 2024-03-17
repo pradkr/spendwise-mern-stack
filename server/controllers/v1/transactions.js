@@ -5,8 +5,9 @@ const Transaction = require('../../models/v1/Transaction');
 exports.getTransactions = async (req, res, next) => {
     //res.send('Get Traxns');
     try{
-        //console.log('query=' + `"email": "${req.params.id}"`)
-        const transactions = await Transaction.find({"email": req.params.id})
+        process.env.DEBUG && console.log('in transaction controller req.user=' + JSON.stringify(req.user))
+        //const transactions = await Transaction.find({"email": req.params.id})
+        const transactions = await Transaction.find({"email": req.user.email})
         //Transaction.find();
         
         return res.status(200).json({
